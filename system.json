@@ -5,11 +5,13 @@
   "version": "1.0.0",
   "compatibility": {
     "minimum": "11",
-    "verified": "12"
+    "verified": "12",
+    "maximum": "13"
   },
   "authors": [
     {
-      "name": "Your Name"
+      "name": "mp2163",
+      "url": "https://github.com/mp2163"
     }
   ],
   "esmodules": ["rogue-trader.mjs"],
@@ -25,7 +27,7 @@
   "gridDistance": 1,
   "gridUnits": "m",
   "primaryTokenAttribute": "wounds",
-  "url": "",
-  "manifest": "",
-  "download": ""
+  "url": "https://github.com/mp2163/rogue-trader-foundry",
+  "manifest": "https://raw.githubusercontent.com/mp2163/rogue-trader-foundry/master/system.json",
+  "download": "https://github.com/mp2163/rogue-trader-foundry/archive/refs/heads/master.zip"
 }
