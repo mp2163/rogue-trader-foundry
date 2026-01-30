@@ -1,0 +1,58 @@
+<form class="{{cssClass}} rogue-trader-sheet item-sheet trait-sheet" autocomplete="off">
+  {{!-- Header --}}
+  <header class="sheet-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <div class="header-fields">
+      <h1 class="item-name">
+        <input name="name" type="text" value="{{item.name}}" placeholder="Trait Name" />
+      </h1>
+    </div>
+  </header>
+
+  {{!-- Tabs --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="modifiers">{{localize "ROGUE_TRADER.Modifiers"}}</a>
+    <a class="item" data-tab="description">{{localize "ROGUE_TRADER.Description"}}</a>
+  </nav>
+
+  {{!-- Body --}}
+  <section class="sheet-body">
+    {{!-- Modifiers Tab --}}
+    <div class="tab modifiers" data-group="primary" data-tab="modifiers">
+      <div class="modifiers-section">
+        <div class="modifiers-header">
+          <h3>{{localize "ROGUE_TRADER.StatModifiers"}}</h3>
+          <a class="modifier-add" title="Add Modifier">
+            <i class="fas fa-plus"></i> {{localize "ROGUE_TRADER.AddModifier"}}
+          </a>
+        </div>
+        <ol class="modifier-list">
+          {{#each system.modifiers as |mod index|}}
+            <li class="modifier-row">
+              <select class="modifier-stat" data-index="{{index}}" data-field="stat">
+                {{#each ../statOptions as |label key|}}
+                  <option value="{{key}}" {{#if (eq key mod.stat)}}selected{{/if}}>{{label}}</option>
+                {{/each}}
+              </select>
+              <input type="number" class="modifier-value" data-index="{{index}}" data-field="value"
+                     value="{{mod.value}}" placeholder="+/-" />
+              <a class="modifier-delete" data-index="{{index}}" title="Delete">
+                <i class="fas fa-trash"></i>
+              </a>
+            </li>
+          {{/each}}
+        </ol>
+        {{#unless system.modifiers.length}}
+          <p class="no-modifiers">No modifiers. Click "Add Modifier" to create one.</p>
+        {{/unless}}
+      </div>
+    </div>
+
+    {{!-- Description Tab --}}
+    <div class="tab description" data-group="primary" data-tab="description">
+      <div class="editor-container">
+        {{editor system.description target="system.description" button=true owner=owner editable=editable}}
+      </div>
+    </div>
+  </section>
+</form>

@@ -1,0 +1,59 @@
+<form class="{{cssClass}} rogue-trader-sheet item-sheet weapon-sheet" autocomplete="off">
+  {{!-- Header --}}
+  <header class="sheet-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <div class="header-fields">
+      <h1 class="item-name">
+        <input name="name" type="text" value="{{item.name}}" placeholder="Weapon Name" />
+      </h1>
+    </div>
+  </header>
+
+  {{!-- Tabs --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="stats">{{localize "ROGUE_TRADER.Stats"}}</a>
+    <a class="item" data-tab="description">{{localize "ROGUE_TRADER.Description"}}</a>
+  </nav>
+
+  {{!-- Body --}}
+  <section class="sheet-body">
+    {{!-- Stats Tab --}}
+    <div class="tab stats" data-group="primary" data-tab="stats">
+      <div class="weapon-stats">
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.AttackType"}}</label>
+          <select name="system.attackType">
+            {{#each attackTypes as |label key|}}
+              <option value="{{key}}" {{#if (eq key ../system.attackType)}}selected{{/if}}>{{label}}</option>
+            {{/each}}
+          </select>
+          <p class="hint">Melee uses Weapon Skill (WS), Ranged uses Ballistic Skill (BS)</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.Damage"}}</label>
+          <input type="text" name="system.damage" value="{{system.damage}}" placeholder="1d10+3" />
+          <p class="hint">Use "SB" for Strength Bonus (e.g., "1d10+SB")</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.Penetration"}}</label>
+          <input type="number" name="system.penetration" value="{{system.penetration}}" data-dtype="Number" placeholder="0" />
+          <p class="hint">Armor Penetration - reduces target's armor value</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.SpecialRules"}}</label>
+          <input type="text" name="system.notes" value="{{system.notes}}" placeholder="Tearing, Reliable, etc." />
+        </div>
+      </div>
+    </div>
+
+    {{!-- Description Tab --}}
+    <div class="tab description" data-group="primary" data-tab="description">
+      <div class="editor-container">
+        {{editor system.description target="system.description" button=true owner=owner editable=editable}}
+      </div>
+    </div>
+  </section>
+</form>

@@ -1,0 +1,31 @@
+{
+  "id": "rogue-trader",
+  "title": "Rogue Trader",
+  "description": "A game system for Warhammer 40,000 Rogue Trader RPG (Fantasy Flight Games d100 system).",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "11",
+    "verified": "12"
+  },
+  "authors": [
+    {
+      "name": "Your Name"
+    }
+  ],
+  "esmodules": ["rogue-trader.mjs"],
+  "styles": ["styles/rogue-trader.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "initiative": "1d10 + @characteristics.ag.bonus + @initiativeBonus",
+  "gridDistance": 1,
+  "gridUnits": "m",
+  "primaryTokenAttribute": "wounds",
+  "url": "",
+  "manifest": "",
+  "download": ""
+}

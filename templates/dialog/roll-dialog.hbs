@@ -1,0 +1,45 @@
+<div class="rogue-trader roll-dialog">
+  <div class="dialog-content">
+    <div class="roll-info">
+      <div class="characteristic-name">{{characteristic}}</div>
+      <div class="base-value">
+        <label>Base Value:</label>
+        <span>{{baseValue}}</span>
+        {{#if hasModifier}}
+          <span class="trait-modifier">(includes +{{modifier}} from traits)</span>
+        {{/if}}
+      </div>
+    </div>
+
+    {{#if isAttack}}
+    <div class="combat-action-select">
+      <label>{{localize "ROGUE_TRADER.CombatAction"}}:</label>
+      <select name="combatAction">
+        {{#each combatActions as |action key|}}
+          <option value="{{action.modifier}}" {{#if (eq key "standard")}}selected{{/if}}>{{action.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+    {{else}}
+    <div class="difficulty-select">
+      <label>{{localize "ROGUE_TRADER.Difficulty"}}:</label>
+      <select name="difficulty">
+        {{#each difficulties as |diff key|}}
+          <option value="{{diff.modifier}}" {{#if (eq key "challenging")}}selected{{/if}}>{{diff.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+    {{/if}}
+
+    <div class="modifier-input">
+      <label for="modifier">{{localize "ROGUE_TRADER.ExtraModifier"}}:</label>
+      <input type="number" name="modifier" value="0" placeholder="+20, -10, etc." />
+      <p class="hint">Additional situational modifiers</p>
+    </div>
+
+    <div class="target-display">
+      <label>Target Number:</label>
+      <span class="target-number">{{baseValue}}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,131 @@
+{
+  "Actor": {
+    "types": ["character", "npc"],
+    "templates": {
+      "base": {
+        "characteristics": {
+          "ws": { "value": 30 },
+          "bs": { "value": 30 },
+          "s": { "value": 30 },
+          "t": { "value": 30 },
+          "ag": { "value": 30 },
+          "int": { "value": 30 },
+          "per": { "value": 30 },
+          "wp": { "value": 30 },
+          "fel": { "value": 30 }
+        },
+        "wounds": {
+          "value": 10,
+          "max": 10
+        },
+        "armor": {
+          "head": 0,
+          "rightArm": 0,
+          "leftArm": 0,
+          "body": 0,
+          "rightLeg": 0,
+          "leftLeg": 0
+        }
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "fate": {
+        "value": 3,
+        "max": 3
+      },
+      "details": {
+        "origin": "",
+        "career": "",
+        "rank": "",
+        "notes": ""
+      },
+      "initiativeBonus": 0,
+      "skills": {
+        "acrobatics": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "awareness": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "barter": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "blather": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "carouse": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "charm": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "chemUse": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "climb": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "command": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "concealment": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "contortionist": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "deceive": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "demolition": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "disguise": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "dodge": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "drive": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "evaluate": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "gamble": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "inquiry": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "interrogation": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "intimidate": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "invocation": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "lipReading": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "literacy": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "logic": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "medicae": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "navigation": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "performer": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "pilot": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "psyniscience": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "scrutiny": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "search": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "security": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "shadowing": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "silentMove": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "sleightOfHand": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "survival": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "swim": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "techUse": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "tracking": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 },
+        "wrangling": { "trained": false, "plus10": false, "plus20": false, "modifier": 0 }
+      },
+      "specializations": {
+        "ciphers": [],
+        "commonLore": [],
+        "forbiddenLore": [],
+        "scholasticLore": [],
+        "secretTongue": [],
+        "speakLanguage": [],
+        "trade": []
+      }
+    },
+    "npc": {
+      "templates": ["base"],
+      "notes": "",
+      "initiativeBonus": 0
+    }
+  },
+  "Item": {
+    "types": ["trait", "weapon", "power"],
+    "templates": {
+      "base": {
+        "description": ""
+      }
+    },
+    "trait": {
+      "templates": ["base"],
+      "modifiers": []
+    },
+    "weapon": {
+      "templates": ["base"],
+      "attackType": "melee",
+      "damage": "1d10",
+      "penetration": 0,
+      "notes": ""
+    },
+    "power": {
+      "templates": ["base"],
+      "characteristic": "wp",
+      "rollType": "skill",
+      "modifier": 0,
+      "damage": "",
+      "penetration": 0,
+      "notes": ""
+    }
+  }
+}

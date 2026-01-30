@@ -1,0 +1,119 @@
+<form class="{{cssClass}} rogue-trader-sheet npc-sheet" autocomplete="off">
+  {{!-- Compact Header --}}
+  <header class="sheet-header npc-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+    <div class="header-fields">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{actor.name}}" placeholder="NPC Name" />
+      </h1>
+      <div class="header-resources">
+        <div class="resource wounds">
+          <label>{{localize "ROGUE_TRADER.Wounds"}}</label>
+          <input type="number" name="system.wounds.value" value="{{system.wounds.value}}" data-dtype="Number" />
+          <span>/</span>
+          <input type="number" name="system.wounds.max" value="{{system.wounds.max}}" data-dtype="Number" />
+        </div>
+        <button type="button" class="initiative-roll">
+          <i class="fas fa-bolt"></i> Init
+        </button>
+      </div>
+    </div>
+  </header>
+
+  {{!-- Compact Characteristics Grid --}}
+  <section class="npc-characteristics">
+    <div class="char-row">
+      {{#each characteristics as |char key|}}
+        <div class="char-cell">
+          <label>{{char.shortLabel}}</label>
+          <input type="number" name="system.characteristics.{{key}}.value"
+                 value="{{char.value}}" data-dtype="Number" class="char-input" />
+          <span class="char-total clickable characteristic-roll"
+                data-characteristic="{{key}}"
+                title="Click to roll {{char.label}}">
+            {{char.total}}
+          </span>
+        </div>
+      {{/each}}
+    </div>
+  </section>
+
+  {{!-- Compact Armor Row --}}
+  <section class="npc-armor">
+    <div class="section-header">
+      <h3>{{localize "ROGUE_TRADER.Armor"}}</h3>
+    </div>
+    <div class="armor-row">
+      <div class="armor-cell">
+        <label>H</label>
+        <input type="number" name="system.armor.head" value="{{system.armor.head}}" data-dtype="Number" title="Head" />
+      </div>
+      <div class="armor-cell">
+        <label>RA</label>
+        <input type="number" name="system.armor.rightArm" value="{{system.armor.rightArm}}" data-dtype="Number" title="Right Arm" />
+      </div>
+      <div class="armor-cell">
+        <label>LA</label>
+        <input type="number" name="system.armor.leftArm" value="{{system.armor.leftArm}}" data-dtype="Number" title="Left Arm" />
+      </div>
+      <div class="armor-cell">
+        <label>B</label>
+        <input type="number" name="system.armor.body" value="{{system.armor.body}}" data-dtype="Number" title="Body" />
+      </div>
+      <div class="armor-cell">
+        <label>RL</label>
+        <input type="number" name="system.armor.rightLeg" value="{{system.armor.rightLeg}}" data-dtype="Number" title="Right Leg" />
+      </div>
+      <div class="armor-cell">
+        <label>LL</label>
+        <input type="number" name="system.armor.leftLeg" value="{{system.armor.leftLeg}}" data-dtype="Number" title="Left Leg" />
+      </div>
+    </div>
+  </section>
+
+  {{!-- Weapons Section --}}
+  <section class="npc-weapons">
+    <div class="section-header">
+      <h3>{{localize "ROGUE_TRADER.Weapons"}}</h3>
+      <a class="item-create" data-type="weapon"><i class="fas fa-plus"></i></a>
+    </div>
+    <ol class="item-list compact">
+      {{#each weapons as |weapon|}}
+        <li class="item weapon" data-item-id="{{weapon._id}}">
+          <span class="item-name item-edit">{{weapon.name}}</span>
+          <span class="weapon-info">{{weapon.system.attackType}} | {{weapon.system.damage}} | Pen {{weapon.system.penetration}}</span>
+          <div class="item-controls">
+            <button type="button" class="weapon-attack" title="Attack"><i class="fas fa-crosshairs"></i></button>
+            <button type="button" class="weapon-damage" title="Damage"><i class="fas fa-tint"></i></button>
+            <a class="item-delete" title="Delete"><i class="fas fa-trash"></i></a>
+          </div>
+        </li>
+      {{/each}}
+    </ol>
+  </section>
+
+  {{!-- Traits Section --}}
+  <section class="npc-traits">
+    <div class="section-header">
+      <h3>{{localize "ROGUE_TRADER.Traits"}}</h3>
+      <a class="item-create" data-type="trait"><i class="fas fa-plus"></i></a>
+    </div>
+    <ol class="item-list compact">
+      {{#each traits as |trait|}}
+        <li class="item trait" data-item-id="{{trait._id}}">
+          <span class="item-name item-edit">{{trait.name}}</span>
+          {{#if trait.modifierSummary}}
+            <span class="trait-mods">{{trait.modifierSummary}}</span>
+          {{/if}}
+          <a class="item-delete" title="Delete"><i class="fas fa-trash"></i></a>
+        </li>
+      {{/each}}
+    </ol>
+  </section>
+
+  {{!-- Notes --}}
+  <section class="npc-notes">
+    <label>{{localize "ROGUE_TRADER.Notes"}}</label>
+    <textarea name="system.notes" placeholder="Abilities, special rules, etc.">{{system.notes}}</textarea>
+  </section>
+</form>

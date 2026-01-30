@@ -1,0 +1,16 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Node modules (if you ever add npm)
+node_modules/
+
+# Foundry packs (compiled compendium data)
+packs/*.db
+
+# Logs
+*.log

@@ -1,0 +1,75 @@
+<form class="{{cssClass}} rogue-trader-sheet item-sheet power-sheet" autocomplete="off">
+  {{!-- Header --}}
+  <header class="sheet-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <div class="header-fields">
+      <h1 class="item-name">
+        <input name="name" type="text" value="{{item.name}}" placeholder="Power Name" />
+      </h1>
+    </div>
+  </header>
+
+  {{!-- Tabs --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="stats">{{localize "ROGUE_TRADER.Stats"}}</a>
+    <a class="item" data-tab="description">{{localize "ROGUE_TRADER.Description"}}</a>
+  </nav>
+
+  {{!-- Body --}}
+  <section class="sheet-body">
+    {{!-- Stats Tab --}}
+    <div class="tab stats" data-group="primary" data-tab="stats">
+      <div class="power-stats">
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.PowerCharacteristic"}}</label>
+          <select name="system.characteristic">
+            {{#each characteristics as |label key|}}
+              <option value="{{key}}" {{#if (eq key ../system.characteristic)}}selected{{/if}}>{{label}}</option>
+            {{/each}}
+          </select>
+          <p class="hint">The characteristic used for this power's roll</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.PowerRollType"}}</label>
+          <select name="system.rollType">
+            {{#each rollTypes as |label key|}}
+              <option value="{{key}}" {{#if (eq key ../system.rollType)}}selected{{/if}}>{{label}}</option>
+            {{/each}}
+          </select>
+          <p class="hint">Attack: shows combat actions. Skill: shows difficulty. Other: just modifier.</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.PowerModifier"}}</label>
+          <input type="number" name="system.modifier" value="{{system.modifier}}" data-dtype="Number" placeholder="0" />
+          <p class="hint">Permanent modifier to the roll (added to target number)</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.PowerDamage"}}</label>
+          <input type="text" name="system.damage" value="{{system.damage}}" placeholder="1d10+3" />
+          <p class="hint">Damage formula (optional). Use "WPB" for Willpower Bonus, etc.</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.Penetration"}}</label>
+          <input type="number" name="system.penetration" value="{{system.penetration}}" data-dtype="Number" placeholder="0" />
+          <p class="hint">Armor Penetration (optional)</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.PowerNotes"}}</label>
+          <input type="text" name="system.notes" value="{{system.notes}}" placeholder="Special rules, effects, etc." />
+        </div>
+      </div>
+    </div>
+
+    {{!-- Description Tab --}}
+    <div class="tab description" data-group="primary" data-tab="description">
+      <div class="editor-container">
+        {{editor system.description target="system.description" button=true owner=owner editable=editable}}
+      </div>
+    </div>
+  </section>
+</form>
