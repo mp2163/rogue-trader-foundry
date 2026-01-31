@@ -23,6 +23,8 @@
 
   "ROGUE_TRADER.Wounds": "Wounds",
   "ROGUE_TRADER.FatePoints": "Fate Points",
+  "ROGUE_TRADER.Corruption": "Corruption",
+  "ROGUE_TRADER.Insanity": "Insanity",
   "ROGUE_TRADER.Initiative": "Initiative",
   "ROGUE_TRADER.RollInitiative": "Roll Initiative",
 
@@ -154,5 +156,13 @@
   "ROGUE_TRADER.PowerRollTypeOther": "Other",
   "ROGUE_TRADER.PowerModifier": "Power Modifier",
   "ROGUE_TRADER.PowerDamage": "Damage",
-  "ROGUE_TRADER.PowerNotes": "Notes"
+  "ROGUE_TRADER.PowerNotes": "Notes",
+
+  "ROGUE_TRADER.Inventory": "Inventory",
+  "ROGUE_TRADER.Gear": "Gear",
+  "ROGUE_TRADER.AddGear": "Add Item",
+  "ROGUE_TRADER.Quantity": "Quantity",
+  "ROGUE_TRADER.Weight": "Weight",
+  "ROGUE_TRADER.TotalWeight": "Total Weight",
+  "ROGUE_TRADER.GearNotes": "Notes"
 }

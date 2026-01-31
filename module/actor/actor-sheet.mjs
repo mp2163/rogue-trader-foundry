@@ -66,6 +66,10 @@ export class RogueTraderActorSheet extends ActorSheet {
     const traits = [];
     const weapons = [];
     const powers = [];
+    const gear = [];
+
+    // Track total carried weight
+    let totalCarriedWeight = 0;
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
@@ -83,6 +87,13 @@ export class RogueTraderActorSheet extends ActorSheet {
         i.charLabel = game.i18n.localize(CONFIG.ROGUE_TRADER.characteristics[charKey]);
         i.rollTypeLabel = game.i18n.localize(CONFIG.ROGUE_TRADER.powerRollTypes[i.system.rollType] || "ROGUE_TRADER.PowerRollTypeSkill");
         powers.push(i);
+      } else if (i.type === "gear") {
+        // Calculate total weight for this gear item
+        const quantity = Number(i.system.quantity) || 0;
+        const weight = Number(i.system.weight) || 0;
+        i.totalWeight = Math.round(quantity * weight * 100) / 100; // Round to 2 decimal places
+        totalCarriedWeight += i.totalWeight;
+        gear.push(i);
       }
     }
 
@@ -90,6 +101,8 @@ export class RogueTraderActorSheet extends ActorSheet {
     context.traits = traits;
     context.weapons = weapons;
     context.powers = powers;
+    context.gear = gear;
+    context.totalCarriedWeight = Math.round(totalCarriedWeight * 100) / 100;
   }
 
   /**
@@ -256,6 +269,10 @@ export class RogueTraderActorSheet extends ActorSheet {
 
     // Power damage roll
     html.on("click", ".power-damage", this._onPowerDamage.bind(this));
+
+    // Gear quantity controls
+    html.on("click", ".gear-increase", this._onGearIncrease.bind(this));
+    html.on("click", ".gear-decrease", this._onGearDecrease.bind(this));
 
     // Drag events for macros
     if (this.actor.isOwner) {
@@ -718,5 +735,39 @@ export class RogueTraderActorSheet extends ActorSheet {
     if (!item || !item.system.damage) return;
 
     return item.rollDamage();
+  }
+
+  /**
+   * Handle gear quantity increase
+   * @param {Event} event The originating click event
+   * @private
+   */
+  async _onGearIncrease(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+
+    if (!item) return;
+
+    const currentQty = Number(item.system.quantity) || 0;
+    await item.update({ "system.quantity": currentQty + 1 });
+  }
+
+  /**
+   * Handle gear quantity decrease
+   * @param {Event} event The originating click event
+   * @private
+   */
+  async _onGearDecrease(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+
+    if (!item) return;
+
+    const currentQty = Number(item.system.quantity) || 0;
+    if (currentQty > 0) {
+      await item.update({ "system.quantity": currentQty - 1 });
+    }
   }
 }

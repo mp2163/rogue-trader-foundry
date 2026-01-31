@@ -44,6 +44,8 @@ export class RogueTraderItemSheet extends ItemSheet {
       this._prepareWeaponData(context);
     } else if (this.item.type === "power") {
       this._preparePowerData(context);
+    } else if (this.item.type === "gear") {
+      this._prepareGearData(context);
     }
 
     // Enrich description for editor
@@ -103,6 +105,17 @@ export class RogueTraderItemSheet extends ItemSheet {
     for (const [key, label] of Object.entries(CONFIG.ROGUE_TRADER.powerRollTypes)) {
       context.rollTypes[key] = game.i18n.localize(label);
     }
+  }
+
+  /**
+   * Prepare gear-specific data
+   * @param {Object} context The item data
+   */
+  _prepareGearData(context) {
+    // Calculate total weight for display
+    const quantity = Number(context.system.quantity) || 0;
+    const weight = Number(context.system.weight) || 0;
+    context.totalWeight = Math.round(quantity * weight * 100) / 100;
   }
 
   /* -------------------------------------------- */

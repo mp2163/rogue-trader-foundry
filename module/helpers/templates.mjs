@@ -13,6 +13,7 @@ export const preloadHandlebarsTemplates = async function () {
     "systems/rogue-trader/templates/item/trait-sheet.hbs",
     "systems/rogue-trader/templates/item/weapon-sheet.hbs",
     "systems/rogue-trader/templates/item/power-sheet.hbs",
+    "systems/rogue-trader/templates/item/gear-sheet.hbs",
 
     // Dialog partials
     "systems/rogue-trader/templates/dialog/roll-dialog.hbs"
