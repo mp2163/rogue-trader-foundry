@@ -264,6 +264,9 @@ export class RogueTraderActorSheet extends ActorSheet {
     // Delete specialization
     html.on("click", ".spec-delete", this._onDeleteSpecialization.bind(this));
 
+    // Specialization field changes (explicit handling for array updates)
+    html.on("change", ".spec-entry input, .spec-entry select", this._onSpecializationChange.bind(this));
+
     // Power roll
     html.on("click", ".power-roll", this._onPowerRoll.bind(this));
 
@@ -296,11 +299,51 @@ export class RogueTraderActorSheet extends ActorSheet {
     const type = header.dataset.type;
 
     const name = `New ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+
+    // Build item data with type-specific defaults
     const itemData = {
       name: name,
       type: type,
       system: {}
     };
+
+    // Add default system data based on type
+    switch (type) {
+      case "gear":
+        itemData.system = {
+          description: "",
+          quantity: 1,
+          weight: 0,
+          notes: ""
+        };
+        break;
+      case "weapon":
+        itemData.system = {
+          description: "",
+          attackType: "melee",
+          damage: "1d10",
+          penetration: 0,
+          notes: ""
+        };
+        break;
+      case "power":
+        itemData.system = {
+          description: "",
+          characteristic: "wp",
+          rollType: "skill",
+          modifier: 0,
+          damage: "",
+          penetration: 0,
+          notes: ""
+        };
+        break;
+      case "trait":
+        itemData.system = {
+          description: "",
+          modifiers: []
+        };
+        break;
+    }
 
     // Create the item
     return await Item.create(itemData, { parent: this.actor });
@@ -549,7 +592,8 @@ export class RogueTraderActorSheet extends ActorSheet {
       trained: true, // New specializations are trained by default
       plus10: false,
       plus20: false,
-      modifier: 0
+      modifier: 0,
+      isBasic: false
     });
 
     await this.actor.update({ "system.specializations": specs });
@@ -576,6 +620,52 @@ export class RogueTraderActorSheet extends ActorSheet {
 
     specs[specKey].splice(specIndex, 1);
 
+    await this.actor.update({ "system.specializations": specs });
+  }
+
+  /**
+   * Handle specialization field changes
+   * @param {Event} event The originating change event
+   * @private
+   */
+  async _onSpecializationChange(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const element = event.currentTarget;
+    const specEntry = element.closest(".spec-entry");
+    if (!specEntry) return;
+
+    const specKey = specEntry.dataset.spec;
+    const specIndex = parseInt(specEntry.dataset.index);
+
+    if (!specKey || isNaN(specIndex)) return;
+
+    // Get current specializations
+    const specs = foundry.utils.deepClone(this.actor.system.specializations || {});
+    if (!specs[specKey] || !specs[specKey][specIndex]) return;
+
+    // Parse the input name to get the field
+    const inputName = element.name;
+    const fieldMatch = inputName.match(/\.(\w+)$/);
+    if (!fieldMatch) return;
+
+    const field = fieldMatch[1];
+
+    // Get the new value
+    let value;
+    if (element.type === "checkbox") {
+      value = element.checked;
+    } else if (element.type === "number") {
+      value = Number(element.value) || 0;
+    } else {
+      value = element.value;
+    }
+
+    // Update the specific field
+    specs[specKey][specIndex][field] = value;
+
+    // Update the actor
     await this.actor.update({ "system.specializations": specs });
   }
 
