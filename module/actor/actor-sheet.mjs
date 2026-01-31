@@ -128,19 +128,29 @@ export class RogueTraderActorSheet extends ActorSheet {
       // Calculate total target number
       const isTrained = skillData.trained || false;
       const isAdvanced = skillConfig.type === "advanced";
-      let baseValue = isTrained ? charTotal : (isAdvanced ? 0 : Math.floor(charTotal / 2));
+      const isBasic = skillData.isBasic || false; // Can override advanced to basic
+      const effectivelyBasic = !isAdvanced || isBasic;
+
+      // If trained: full char value
+      // If untrained basic: half char value
+      // If untrained advanced (not made basic): cannot use (0)
+      let baseValue = isTrained ? charTotal : (effectivelyBasic ? Math.floor(charTotal / 2) : 0);
 
       let total = baseValue;
       if (skillData.plus10) total += 10;
       if (skillData.plus20) total += 20;
       total += Number(skillData.modifier) || 0;
 
+      // Can use if trained, or if effectively basic (even untrained)
+      const canUse = isTrained || effectivelyBasic;
+
       skills[key] = {
         ...skillData,
         label: game.i18n.localize(skillConfig.label),
         charLabel: skillConfig.char.toUpperCase(),
         isAdvanced: isAdvanced,
-        total: isTrained || !isAdvanced ? total : "—"
+        isBasic: isBasic,
+        total: canUse ? total : "—"
       };
     }
     context.skills = skills;
@@ -156,16 +166,25 @@ export class RogueTraderActorSheet extends ActorSheet {
 
       const processedEntries = entries.map((entry, idx) => {
         const isTrained = entry.trained || false;
-        let baseValue = isTrained ? charTotal : 0; // Advanced skills need training
+        const isBasic = entry.isBasic || false; // Can override advanced to basic
+
+        // If trained: full char value
+        // If marked basic but untrained: half char value
+        // If advanced and untrained (not made basic): cannot use
+        let baseValue = isTrained ? charTotal : (isBasic ? Math.floor(charTotal / 2) : 0);
 
         let total = baseValue;
         if (entry.plus10) total += 10;
         if (entry.plus20) total += 20;
         total += Number(entry.modifier) || 0;
 
+        // Can use if trained, or if marked as basic
+        const canUse = isTrained || isBasic;
+
         return {
           ...entry,
-          total: isTrained ? total : "—"
+          isBasic: isBasic,
+          total: canUse ? total : "—"
         };
       });
 

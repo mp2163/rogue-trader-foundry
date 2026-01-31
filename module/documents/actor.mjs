@@ -205,14 +205,16 @@ export class RogueTraderActor extends Actor {
     // Calculate target number
     const isAdvanced = skillConfig.type === "advanced";
     const isTrained = skillData.trained;
+    const isBasic = skillData.isBasic || false; // Can override advanced to basic
+    const effectivelyBasic = !isAdvanced || isBasic;
 
-    // Advanced skills can't be used untrained
-    if (isAdvanced && !isTrained) {
+    // Advanced skills can't be used untrained (unless marked as basic)
+    if (isAdvanced && !isTrained && !isBasic) {
       ui.notifications.warn(`${skillName} is an advanced skill and requires training.`);
       return;
     }
 
-    // Base value: full characteristic if trained, half if untrained (basic only)
+    // Base value: full characteristic if trained, half if untrained (basic or made basic)
     let baseValue = isTrained ? char.total : Math.floor(char.total / 2);
 
     // Apply training bonuses
@@ -240,7 +242,8 @@ export class RogueTraderActor extends Actor {
     if (isTrained) {
       breakdown.push(`${char.total} (${game.i18n.localize(CONFIG.ROGUE_TRADER.characteristics[charKey])})`);
     } else {
-      breakdown.push(`${Math.floor(char.total / 2)} (Half ${game.i18n.localize(CONFIG.ROGUE_TRADER.characteristics[charKey])})`);
+      const halfNote = isAdvanced && isBasic ? "Half - Basic" : "Half";
+      breakdown.push(`${Math.floor(char.total / 2)} (${halfNote} ${game.i18n.localize(CONFIG.ROGUE_TRADER.characteristics[charKey])})`);
     }
     if (trainingBonus > 0) breakdown.push(`+${trainingBonus} (Training)`);
     if (skillMod !== 0) breakdown.push(`${skillMod >= 0 ? "+" : ""}${skillMod} (Skill Mod)`);

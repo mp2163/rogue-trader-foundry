@@ -98,9 +98,15 @@
               <span class="skill-name clickable skill-roll" data-skill="{{key}}" title="Click to roll">
                 {{skill.label}}
                 <span class="skill-char">({{skill.charLabel}})</span>
-                {{#if skill.isAdvanced}}<span class="skill-adv">Adv</span>{{/if}}
+                {{#if skill.isAdvanced}}{{#unless skill.isBasic}}<span class="skill-adv">Adv</span>{{/unless}}{{/if}}
               </span>
               <div class="skill-training">
+                {{#if skill.isAdvanced}}
+                <label class="checkbox-label" title="Make Basic (allows untrained use at half characteristic)">
+                  <input type="checkbox" name="system.skills.{{key}}.isBasic" {{#if skill.isBasic}}checked{{/if}} />
+                  B
+                </label>
+                {{/if}}
                 <label class="checkbox-label" title="Trained">
                   <input type="checkbox" name="system.skills.{{key}}.trained" {{#if skill.trained}}checked{{/if}} />
                   T
@@ -136,6 +142,11 @@
                     <input type="text" class="spec-entry-name" name="system.specializations.{{../key}}.{{idx}}.name"
                            value="{{entry.name}}" placeholder="Specialization..." />
                     <div class="skill-training">
+                      <label class="checkbox-label" title="Make Basic (allows untrained use at half characteristic)">
+                        <input type="checkbox" name="system.specializations.{{../key}}.{{idx}}.isBasic"
+                               {{#if entry.isBasic}}checked{{/if}} />
+                        B
+                      </label>
                       <label class="checkbox-label" title="Trained">
                         <input type="checkbox" name="system.specializations.{{../key}}.{{idx}}.trained"
                                {{#if entry.trained}}checked{{/if}} />

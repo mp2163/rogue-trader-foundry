@@ -62,6 +62,7 @@
   "ROGUE_TRADER.Skills": "Skills",
   "ROGUE_TRADER.SkillTrained": "Trained",
   "ROGUE_TRADER.SkillBasic": "Basic",
+  "ROGUE_TRADER.SkillMakeBasic": "Make Basic",
   "ROGUE_TRADER.SkillAdvanced": "Advanced",
   "ROGUE_TRADER.SkillAddSpecialization": "Add",
 
