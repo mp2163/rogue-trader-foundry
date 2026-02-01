@@ -52,6 +52,10 @@ export class RogueTraderItemSheet extends ItemSheet {
       { async: true }
     );
 
+    // Add editor context
+    context.owner = this.item.isOwner;
+    context.editable = this.isEditable;
+
     return context;
   }
 

@@ -560,6 +560,26 @@
   margin-top: 3px;
 }
 
+/* Item Notes Textarea */
+.item-sheet .form-group.notes-group textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  background: var(--rt-bg-medium);
+  color: var(--rt-text);
+  border: 1px solid var(--rt-border);
+  border-radius: 3px;
+  padding: 8px;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.item-sheet .form-group.notes-group textarea:focus {
+  outline: none;
+  border-color: var(--rt-gold);
+  box-shadow: 0 0 3px var(--rt-gold);
+}
+
 /* Trait Modifiers */
 .trait-sheet .modifiers-header {
   display: flex;
