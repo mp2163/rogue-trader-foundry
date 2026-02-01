@@ -54,6 +54,10 @@ export class RogueTraderActorSheet extends ActorSheet {
     // Add roll data for TinyMCE editors
     context.rollData = context.actor.getRollData();
 
+    // Add editor context
+    context.owner = this.actor.isOwner;
+    context.editable = this.isEditable;
+
     return context;
   }
 
@@ -279,7 +283,7 @@ export class RogueTraderActorSheet extends ActorSheet {
     html.on("click", ".spec-delete", this._onDeleteSpecialization.bind(this));
 
     // Specialization field changes (explicit handling for array updates)
-    html.on("change", ".spec-entry input, .spec-entry select", this._onSpecializationChange.bind(this));
+    html.on("change", ".spec-entry input[data-field], .spec-entry select[data-field]", this._onSpecializationChange.bind(this));
 
     // Power roll
     html.on("click", ".power-roll", this._onPowerRoll.bind(this));
@@ -645,19 +649,13 @@ export class RogueTraderActorSheet extends ActorSheet {
 
     const specKey = specEntry.dataset.spec;
     const specIndex = parseInt(specEntry.dataset.index);
+    const field = element.dataset.field;
 
-    if (!specKey || isNaN(specIndex)) return;
+    if (!specKey || isNaN(specIndex) || !field) return;
 
     // Get current specializations
     const specs = foundry.utils.deepClone(this.actor.system.specializations || {});
     if (!specs[specKey] || !specs[specKey][specIndex]) return;
-
-    // Parse the input name to get the field
-    const inputName = element.name;
-    const fieldMatch = inputName.match(/\.(\w+)$/);
-    if (!fieldMatch) return;
-
-    const field = fieldMatch[1];
 
     // Get the new value
     let value;

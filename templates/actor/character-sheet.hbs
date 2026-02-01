@@ -142,7 +142,7 @@
 
         {{!-- Specialization Skills --}}
         <div class="specializations-section">
-          <h3>Specialization Skills</h3>
+          <h3>{{localize "ROGUE_TRADER.SpecializationSkills"}}</h3>
           {{#each specializations as |spec key|}}
             <div class="specialization-group" data-spec="{{key}}">
               <div class="spec-header">
@@ -152,32 +152,32 @@
               <div class="spec-entries">
                 {{#each spec.entries as |entry idx|}}
                   <div class="spec-entry" data-spec="{{../key}}" data-index="{{idx}}">
-                    <input type="text" class="spec-entry-name" name="system.specializations.{{../key}}.{{idx}}.name"
+                    <input type="text" class="spec-entry-name" data-field="name"
                            value="{{entry.name}}" placeholder="Specialization..." />
                     <div class="skill-training">
                       <label class="checkbox-label" title="Make Basic (allows untrained use at half characteristic)">
-                        <input type="checkbox" name="system.specializations.{{../key}}.{{idx}}.isBasic"
+                        <input type="checkbox" data-field="isBasic"
                                {{#if entry.isBasic}}checked{{/if}} />
                         B
                       </label>
                       <label class="checkbox-label" title="Trained">
-                        <input type="checkbox" name="system.specializations.{{../key}}.{{idx}}.trained"
+                        <input type="checkbox" data-field="trained"
                                {{#if entry.trained}}checked{{/if}} />
                         T
                       </label>
                       <label class="checkbox-label" title="+10">
-                        <input type="checkbox" name="system.specializations.{{../key}}.{{idx}}.plus10"
+                        <input type="checkbox" data-field="plus10"
                                {{#if entry.plus10}}checked{{/if}} />
                         +10
                       </label>
                       <label class="checkbox-label" title="+20">
-                        <input type="checkbox" name="system.specializations.{{../key}}.{{idx}}.plus20"
+                        <input type="checkbox" data-field="plus20"
                                {{#if entry.plus20}}checked{{/if}} />
                         +20
                       </label>
-                      <input type="number" name="system.specializations.{{../key}}.{{idx}}.modifier"
+                      <input type="number" data-field="modifier"
                              value="{{entry.modifier}}" class="skill-mod" placeholder="±"
-                             title="Miscellaneous Modifier" data-dtype="Number" />
+                             title="Miscellaneous Modifier" />
                     </div>
                     <span class="skill-total clickable spec-roll" data-spec="{{../key}}" data-index="{{idx}}"
                           title="Click to roll">{{entry.total}}</span>
@@ -278,7 +278,7 @@
         <ol class="inventory-list">
           {{#each inventory as |item idx|}}
             <li class="inventory-item" data-index="{{idx}}">
-              <input type="text" class="inv-name" data-field="name" value="{{item.name}}" placeholder="Item name..." />
+              <input type="text" class="inv-name" data-field="name" value="{{item.name}}" placeholder="Item Name..." />
               <input type="number" class="inv-qty" data-field="quantity" value="{{item.quantity}}" min="0" title="Quantity" />
               <input type="number" class="inv-weight" data-field="weight" value="{{item.weight}}" min="0" step="0.1" title="Weight (kg)" />
               <span class="inv-total-weight">({{item.totalWeight}} kg)</span>
@@ -370,8 +370,8 @@
 
     {{!-- Notes Tab --}}
     <div class="tab notes" data-group="primary" data-tab="notes">
-      <div class="editor-container">
-        {{editor system.details.notes target="system.details.notes" button=true owner=owner editable=editable}}
+      <div class="notes-editor">
+        {{editor system.details.notes target="system.details.notes" button=true editable=editable}}
       </div>
     </div>
   </section>

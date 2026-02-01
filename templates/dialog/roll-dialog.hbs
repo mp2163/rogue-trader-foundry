@@ -3,7 +3,7 @@
     <div class="roll-info">
       <div class="characteristic-name">{{characteristic}}</div>
       <div class="base-value">
-        <label>Base Value:</label>
+        <label>{{localize "ROGUE_TRADER.BaseValue"}}:</label>
         <span>{{baseValue}}</span>
         {{#if hasModifier}}
           <span class="trait-modifier">(includes +{{modifier}} from traits)</span>
@@ -34,11 +34,11 @@
     <div class="modifier-input">
       <label for="modifier">{{localize "ROGUE_TRADER.ExtraModifier"}}:</label>
       <input type="number" name="modifier" value="0" placeholder="+20, -10, etc." />
-      <p class="hint">Additional situational modifiers</p>
+      <p class="hint">{{localize "ROGUE_TRADER.AdditionalModifiers"}}</p>
     </div>
 
     <div class="target-display">
-      <label>Target Number:</label>
+      <label>{{localize "ROGUE_TRADER.TargetNumber"}}:</label>
       <span class="target-number">{{baseValue}}</span>
     </div>
   </div>

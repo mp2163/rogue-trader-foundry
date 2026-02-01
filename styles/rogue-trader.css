@@ -1309,3 +1309,50 @@
 .rogue-trader-sheet .inventory-add:hover {
   text-decoration: underline;
 }
+
+/* -------------------------------------------- */
+/*  Notes Tab                                   */
+/* -------------------------------------------- */
+
+.rogue-trader-sheet .tab.notes {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.rogue-trader-sheet .notes-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+
+.rogue-trader-sheet .notes-editor .editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.rogue-trader-sheet .notes-editor .editor-content {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--rt-bg-medium);
+  border: 1px solid var(--rt-border);
+  border-radius: 3px;
+  padding: 10px;
+  min-height: 250px;
+}
+
+.rogue-trader-sheet .notes-editor .editor-content:focus {
+  outline: none;
+  border-color: var(--rt-gold);
+}
+
+/* ProseMirror editor styling */
+.rogue-trader-sheet .notes-editor .editor-content .ProseMirror {
+  min-height: 230px;
+}
+
+.rogue-trader-sheet .notes-editor .editor-edit {
+  margin-bottom: 5px;
+}

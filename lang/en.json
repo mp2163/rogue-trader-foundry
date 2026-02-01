@@ -164,5 +164,12 @@
   "ROGUE_TRADER.Quantity": "Quantity",
   "ROGUE_TRADER.Weight": "Weight",
   "ROGUE_TRADER.TotalWeight": "Total Weight",
-  "ROGUE_TRADER.GearNotes": "Notes"
+  "ROGUE_TRADER.GearNotes": "Notes",
+
+  "ROGUE_TRADER.SpecializationSkills": "Specialization Skills",
+  "ROGUE_TRADER.BaseValue": "Base Value",
+  "ROGUE_TRADER.TargetNumber": "Target Number",
+  "ROGUE_TRADER.NoModifiers": "No modifiers. Click \"Add Modifier\" to create one.",
+  "ROGUE_TRADER.AdditionalModifiers": "Additional situational modifiers",
+  "ROGUE_TRADER.Init": "Init"
 }
