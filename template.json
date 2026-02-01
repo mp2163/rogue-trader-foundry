@@ -98,7 +98,8 @@
         "secretTongue": [],
         "speakLanguage": [],
         "trade": []
-      }
+      },
+      "inventory": []
     },
     "npc": {
       "templates": ["base"],
@@ -107,7 +108,7 @@
     }
   },
   "Item": {
-    "types": ["trait", "weapon", "power", "gear"],
+    "types": ["trait", "weapon", "power"],
     "templates": {
       "base": {
         "description": ""
@@ -131,12 +132,6 @@
       "modifier": 0,
       "damage": "",
       "penetration": 0,
-      "notes": ""
-    },
-    "gear": {
-      "templates": ["base"],
-      "quantity": 1,
-      "weight": 0,
       "notes": ""
     }
   }

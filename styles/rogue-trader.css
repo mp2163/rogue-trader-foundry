@@ -1227,3 +1227,85 @@
   background: var(--rt-bg-medium);
   color: var(--rt-text);
 }
+
+/* -------------------------------------------- */
+/*  Inventory Section                           */
+/* -------------------------------------------- */
+
+.rogue-trader-sheet .inventory-summary {
+  padding: 8px 10px;
+  background: var(--rt-bg-medium);
+  margin-bottom: 10px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rogue-trader-sheet .total-weight-label {
+  color: var(--rt-text-muted);
+}
+
+.rogue-trader-sheet .total-weight-value {
+  color: var(--rt-gold);
+  font-weight: bold;
+}
+
+.rogue-trader-sheet .inventory-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rogue-trader-sheet .inventory-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--rt-bg-medium);
+  border-bottom: 1px solid var(--rt-border);
+}
+
+.rogue-trader-sheet .inventory-item:hover {
+  background: var(--rt-bg-light);
+}
+
+.rogue-trader-sheet .inventory-item .inv-name {
+  flex: 1;
+  min-width: 120px;
+}
+
+.rogue-trader-sheet .inventory-item .inv-qty {
+  width: 50px;
+  text-align: center;
+}
+
+.rogue-trader-sheet .inventory-item .inv-weight {
+  width: 60px;
+  text-align: center;
+}
+
+.rogue-trader-sheet .inventory-item .inv-total-weight {
+  width: 70px;
+  color: var(--rt-text-muted);
+  font-size: 11px;
+  text-align: right;
+}
+
+.rogue-trader-sheet .inventory-item .inventory-delete {
+  color: var(--rt-text-muted);
+  cursor: pointer;
+  padding: 3px 5px;
+}
+
+.rogue-trader-sheet .inventory-item .inventory-delete:hover {
+  color: var(--rt-accent-light);
+}
+
+.rogue-trader-sheet .inventory-add {
+  cursor: pointer;
+  color: var(--rt-gold);
+}
+
+.rogue-trader-sheet .inventory-add:hover {
+  text-decoration: underline;
+}

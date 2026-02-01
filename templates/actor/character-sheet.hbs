@@ -271,30 +271,18 @@
       <div class="items-section gear">
         <div class="items-header">
           <h3>{{localize "ROGUE_TRADER.Gear"}}</h3>
-          <a class="item-create" data-type="gear" title="Create Item">
+          <a class="inventory-add" title="Add Item">
             <i class="fas fa-plus"></i> {{localize "ROGUE_TRADER.AddGear"}}
           </a>
         </div>
-        <ol class="item-list gear-list">
-          {{#each gear as |item|}}
-            <li class="item gear" data-item-id="{{item._id}}">
-              <div class="item-image">
-                <img src="{{item.img}}" title="{{item.name}}" />
-              </div>
-              <div class="item-name">
-                <h4 class="item-edit">{{item.name}}</h4>
-                <span class="gear-info">
-                  <span class="gear-quantity">x{{item.system.quantity}}</span>
-                  <span class="gear-weight">{{item.system.weight}} kg ea.</span>
-                  <span class="gear-total-weight">({{item.totalWeight}} kg)</span>
-                </span>
-              </div>
-              <div class="item-controls">
-                <a class="gear-decrease" title="Decrease Quantity"><i class="fas fa-minus"></i></a>
-                <a class="gear-increase" title="Increase Quantity"><i class="fas fa-plus"></i></a>
-                <a class="item-edit" title="Edit"><i class="fas fa-edit"></i></a>
-                <a class="item-delete" title="Delete"><i class="fas fa-trash"></i></a>
-              </div>
+        <ol class="inventory-list">
+          {{#each inventory as |item idx|}}
+            <li class="inventory-item" data-index="{{idx}}">
+              <input type="text" class="inv-name" data-field="name" value="{{item.name}}" placeholder="Item name..." />
+              <input type="number" class="inv-qty" data-field="quantity" value="{{item.quantity}}" min="0" title="Quantity" />
+              <input type="number" class="inv-weight" data-field="weight" value="{{item.weight}}" min="0" step="0.1" title="Weight (kg)" />
+              <span class="inv-total-weight">({{item.totalWeight}} kg)</span>
+              <a class="inventory-delete" data-index="{{idx}}" title="Delete"><i class="fas fa-trash"></i></a>
             </li>
           {{/each}}
         </ol>

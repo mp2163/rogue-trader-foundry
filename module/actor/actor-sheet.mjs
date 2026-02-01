@@ -66,10 +66,6 @@ export class RogueTraderActorSheet extends ActorSheet {
     const traits = [];
     const weapons = [];
     const powers = [];
-    const gear = [];
-
-    // Track total carried weight
-    let totalCarriedWeight = 0;
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
@@ -87,13 +83,6 @@ export class RogueTraderActorSheet extends ActorSheet {
         i.charLabel = game.i18n.localize(CONFIG.ROGUE_TRADER.characteristics[charKey]);
         i.rollTypeLabel = game.i18n.localize(CONFIG.ROGUE_TRADER.powerRollTypes[i.system.rollType] || "ROGUE_TRADER.PowerRollTypeSkill");
         powers.push(i);
-      } else if (i.type === "gear") {
-        // Calculate total weight for this gear item
-        const quantity = Number(i.system.quantity) || 0;
-        const weight = Number(i.system.weight) || 0;
-        i.totalWeight = Math.round(quantity * weight * 100) / 100; // Round to 2 decimal places
-        totalCarriedWeight += i.totalWeight;
-        gear.push(i);
       }
     }
 
@@ -101,8 +90,6 @@ export class RogueTraderActorSheet extends ActorSheet {
     context.traits = traits;
     context.weapons = weapons;
     context.powers = powers;
-    context.gear = gear;
-    context.totalCarriedWeight = Math.round(totalCarriedWeight * 100) / 100;
   }
 
   /**
@@ -122,6 +109,33 @@ export class RogueTraderActorSheet extends ActorSheet {
 
     // Prepare skills for display
     this._prepareSkills(context);
+
+    // Prepare inventory for display
+    this._prepareInventory(context);
+  }
+
+  /**
+   * Prepare inventory data for display
+   * @param {Object} context The actor data to prepare
+   */
+  _prepareInventory(context) {
+    const rawInventory = context.system.inventory || [];
+    let totalCarriedWeight = 0;
+
+    const inventory = rawInventory.map((item, idx) => {
+      const quantity = Number(item.quantity) || 0;
+      const weight = Number(item.weight) || 0;
+      const totalWeight = Math.round(quantity * weight * 100) / 100;
+      totalCarriedWeight += totalWeight;
+
+      return {
+        ...item,
+        totalWeight: totalWeight
+      };
+    });
+
+    context.inventory = inventory;
+    context.totalCarriedWeight = Math.round(totalCarriedWeight * 100) / 100;
   }
 
   /**
@@ -273,9 +287,10 @@ export class RogueTraderActorSheet extends ActorSheet {
     // Power damage roll
     html.on("click", ".power-damage", this._onPowerDamage.bind(this));
 
-    // Gear quantity controls
-    html.on("click", ".gear-increase", this._onGearIncrease.bind(this));
-    html.on("click", ".gear-decrease", this._onGearDecrease.bind(this));
+    // Inventory controls
+    html.on("click", ".inventory-add", this._onInventoryAdd.bind(this));
+    html.on("click", ".inventory-delete", this._onInventoryDelete.bind(this));
+    html.on("change", ".inventory-item input", this._onInventoryChange.bind(this));
 
     // Drag events for macros
     if (this.actor.isOwner) {
@@ -309,14 +324,6 @@ export class RogueTraderActorSheet extends ActorSheet {
 
     // Add default system data based on type
     switch (type) {
-      case "gear":
-        itemData.system = {
-          description: "",
-          quantity: 1,
-          weight: 0,
-          notes: ""
-        };
-        break;
       case "weapon":
         itemData.system = {
           description: "",
@@ -828,36 +835,69 @@ export class RogueTraderActorSheet extends ActorSheet {
   }
 
   /**
-   * Handle gear quantity increase
+   * Handle adding an inventory item
    * @param {Event} event The originating click event
    * @private
    */
-  async _onGearIncrease(event) {
+  async _onInventoryAdd(event) {
     event.preventDefault();
-    const itemId = event.currentTarget.closest(".item").dataset.itemId;
-    const item = this.actor.items.get(itemId);
 
-    if (!item) return;
+    const inventory = foundry.utils.deepClone(this.actor.system.inventory || []);
+    inventory.push({
+      name: "",
+      quantity: 1,
+      weight: 0
+    });
 
-    const currentQty = Number(item.system.quantity) || 0;
-    await item.update({ "system.quantity": currentQty + 1 });
+    await this.actor.update({ "system.inventory": inventory });
   }
 
   /**
-   * Handle gear quantity decrease
+   * Handle deleting an inventory item
    * @param {Event} event The originating click event
    * @private
    */
-  async _onGearDecrease(event) {
+  async _onInventoryDelete(event) {
     event.preventDefault();
-    const itemId = event.currentTarget.closest(".item").dataset.itemId;
-    const item = this.actor.items.get(itemId);
+    const index = parseInt(event.currentTarget.dataset.index);
 
-    if (!item) return;
+    if (isNaN(index)) return;
 
-    const currentQty = Number(item.system.quantity) || 0;
-    if (currentQty > 0) {
-      await item.update({ "system.quantity": currentQty - 1 });
+    const inventory = foundry.utils.deepClone(this.actor.system.inventory || []);
+    if (index < 0 || index >= inventory.length) return;
+
+    inventory.splice(index, 1);
+    await this.actor.update({ "system.inventory": inventory });
+  }
+
+  /**
+   * Handle inventory item field changes
+   * @param {Event} event The originating change event
+   * @private
+   */
+  async _onInventoryChange(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const inventoryItem = element.closest(".inventory-item");
+    if (!inventoryItem) return;
+
+    const index = parseInt(inventoryItem.dataset.index);
+    const field = element.dataset.field;
+
+    if (isNaN(index) || !field) return;
+
+    const inventory = foundry.utils.deepClone(this.actor.system.inventory || []);
+    if (index < 0 || index >= inventory.length) return;
+
+    // Get the new value
+    let value;
+    if (element.type === "number") {
+      value = Number(element.value) || 0;
+    } else {
+      value = element.value;
     }
+
+    inventory[index][field] = value;
+    await this.actor.update({ "system.inventory": inventory });
   }
 }
