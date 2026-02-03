@@ -617,9 +617,12 @@ export class RogueTraderActorSheet extends ActorSheet {
    */
   async _onDeleteSpecialization(event) {
     event.preventDefault();
-    const element = event.currentTarget;
-    const specKey = element.dataset.spec;
-    const specIndex = parseInt(element.dataset.index);
+    // Use event.target and find the closest .spec-delete for delegated events
+    const deleteBtn = event.target.closest(".spec-delete");
+    if (!deleteBtn) return;
+
+    const specKey = deleteBtn.dataset.spec;
+    const specIndex = parseInt(deleteBtn.dataset.index);
 
     if (!specKey || isNaN(specIndex)) return;
 
@@ -643,7 +646,8 @@ export class RogueTraderActorSheet extends ActorSheet {
     event.preventDefault();
     event.stopPropagation();
 
-    const element = event.currentTarget;
+    // Use event.target for the actual input element in delegated events
+    const element = event.target;
     const specEntry = element.closest(".spec-entry");
     if (!specEntry) return;
 
