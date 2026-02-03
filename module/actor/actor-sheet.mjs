@@ -497,7 +497,10 @@ export class RogueTraderActorSheet extends ActorSheet {
    */
   async _onSpecializationRoll(event) {
     event.preventDefault();
-    const element = event.currentTarget;
+    // Use event.target and find closest .spec-roll for delegated events
+    const element = event.target.closest(".spec-roll");
+    if (!element) return;
+
     const specKey = element.dataset.spec;
     const specIndex = parseInt(element.dataset.index);
 
