@@ -173,29 +173,16 @@ export class RogueTraderActor extends Actor {
    * @param {string} skillKey - The skill key
    * @param {object} options - Options for the roll
    * @param {number} options.modifier - Additional modifier to apply
-   * @param {boolean} options.isSpecialization - Whether this is a specialization skill
-   * @param {number} options.specIndex - Index of the specialization entry
    */
   async rollSkill(skillKey, options = {}) {
-    const skillConfig = options.isSpecialization
-      ? CONFIG.ROGUE_TRADER.specializations[skillKey]
-      : CONFIG.ROGUE_TRADER.skills[skillKey];
+    const skillConfig = CONFIG.ROGUE_TRADER.skills[skillKey];
 
     if (!skillConfig) return;
 
     // Get the skill data
-    let skillData;
-    let skillName;
-    if (options.isSpecialization) {
-      const entries = this.system.specializations?.[skillKey] || [];
-      skillData = entries[options.specIndex];
-      if (!skillData) return;
-      skillName = `${game.i18n.localize(skillConfig.label)} (${skillData.name})`;
-    } else {
-      skillData = this.system.skills?.[skillKey];
-      if (!skillData) return;
-      skillName = game.i18n.localize(skillConfig.label);
-    }
+    const skillData = this.system.skills?.[skillKey];
+    if (!skillData) return;
+    const skillName = game.i18n.localize(skillConfig.label);
 
     // Get the characteristic
     const charKey = skillConfig.char;

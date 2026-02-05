@@ -1041,91 +1041,78 @@
 }
 
 /* -------------------------------------------- */
-/*  Specialization Skills                       */
+/*  Custom Skills (Item-based)                  */
 /* -------------------------------------------- */
 
-.rogue-trader-sheet .specializations-section {
+.rogue-trader-sheet .custom-skills-section {
   border-top: 2px solid var(--rt-border);
   padding-top: 10px;
+  margin-top: 10px;
 }
 
-.rogue-trader-sheet .specializations-section h3 {
-  margin: 0 0 10px 0;
+.rogue-trader-sheet .custom-skills-section .items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.rogue-trader-sheet .custom-skills-section h3 {
+  margin: 0;
   color: var(--rt-gold);
   text-transform: uppercase;
   font-size: 12px;
 }
 
-.rogue-trader-sheet .specialization-group {
-  margin-bottom: 10px;
+.rogue-trader-sheet .custom-skills-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rogue-trader-sheet .custom-skills-list .item.skill {
   background: var(--rt-bg-medium);
-  border-radius: 5px;
-  overflow: hidden;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  padding: 4px 8px;
 }
 
-.rogue-trader-sheet .spec-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 10px;
-  background: var(--rt-bg-light);
-  border-bottom: 1px solid var(--rt-border);
-}
-
-.rogue-trader-sheet .spec-name {
-  font-size: 12px;
-  font-weight: bold;
-  color: var(--rt-gold);
-}
-
-.rogue-trader-sheet .spec-add {
-  color: var(--rt-text-muted);
-  cursor: pointer;
-  padding: 2px 6px;
-}
-
-.rogue-trader-sheet .spec-add:hover {
-  color: var(--rt-gold);
-}
-
-.rogue-trader-sheet .spec-entries {
-  padding: 5px;
-}
-
-.rogue-trader-sheet .spec-entry {
+.rogue-trader-sheet .skill-item-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px;
-  border-bottom: 1px solid var(--rt-border);
 }
 
-.rogue-trader-sheet .spec-entry:last-child {
-  border-bottom: none;
+.rogue-trader-sheet .skill-item-row .skill-name {
+  flex: 1;
 }
 
-.rogue-trader-sheet .spec-entry-name {
-  width: 120px !important;
-  font-size: 11px;
-}
-
-.rogue-trader-sheet .spec-entry .skill-total {
+.rogue-trader-sheet .skill-item-row .skill-name.clickable {
   cursor: pointer;
 }
 
-.rogue-trader-sheet .spec-entry .skill-total:hover {
-  background: var(--rt-accent-light);
-  box-shadow: 0 0 3px var(--rt-gold);
+.rogue-trader-sheet .skill-item-row .skill-name.clickable:hover {
+  color: var(--rt-gold);
 }
 
-.rogue-trader-sheet .spec-delete {
-  color: var(--rt-text-muted);
-  cursor: pointer;
-  padding: 2px 4px;
+.rogue-trader-sheet .skill-training-display {
+  display: flex;
+  gap: 3px;
 }
 
-.rogue-trader-sheet .spec-delete:hover {
-  color: var(--rt-failure);
+.rogue-trader-sheet .training-badge {
+  background: var(--rt-bg-light);
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 10px;
+  color: var(--rt-gold);
+}
+
+.rogue-trader-sheet .skill-item-row .skill-total {
+  min-width: 30px;
+  text-align: center;
+  font-weight: bold;
+  color: var(--rt-gold);
 }
 
 /* -------------------------------------------- */

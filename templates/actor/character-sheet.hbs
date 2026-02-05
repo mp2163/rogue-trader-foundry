@@ -140,55 +140,36 @@
           {{/each}}
         </div>
 
-        {{!-- Specialization Skills --}}
-        <div class="specializations-section">
-          <h3>{{localize "ROGUE_TRADER.SpecializationSkills"}}</h3>
-          {{#each specializations as |spec key|}}
-            <div class="specialization-group" data-spec="{{key}}">
-              <div class="spec-header">
-                <span class="spec-name">{{spec.label}} <span class="skill-char">({{spec.charLabel}})</span></span>
-                <a class="spec-add" data-spec="{{key}}" title="Add Specialization"><i class="fas fa-plus"></i></a>
-              </div>
-              <div class="spec-entries">
-                {{#each spec.entries as |entry idx|}}
-                  <div class="spec-entry" data-spec="{{../key}}" data-index="{{idx}}">
-                    <input type="text" class="spec-entry-name" data-field="name"
-                           value="{{entry.name}}" placeholder="Specialization..." />
-                    <div class="skill-training">
-                      <label class="checkbox-label" title="Make Basic (allows untrained use at half characteristic)">
-                        <input type="checkbox" data-field="isBasic"
-                               {{#if entry.isBasic}}checked{{/if}} />
-                        B
-                      </label>
-                      <label class="checkbox-label" title="Trained">
-                        <input type="checkbox" data-field="trained"
-                               {{#if entry.trained}}checked{{/if}} />
-                        T
-                      </label>
-                      <label class="checkbox-label" title="+10">
-                        <input type="checkbox" data-field="plus10"
-                               {{#if entry.plus10}}checked{{/if}} />
-                        +10
-                      </label>
-                      <label class="checkbox-label" title="+20">
-                        <input type="checkbox" data-field="plus20"
-                               {{#if entry.plus20}}checked{{/if}} />
-                        +20
-                      </label>
-                      <input type="number" data-field="modifier"
-                             value="{{entry.modifier}}" class="skill-mod" placeholder="±"
-                             title="Miscellaneous Modifier" />
-                    </div>
-                    <span class="skill-total clickable spec-roll" data-spec="{{../key}}" data-index="{{idx}}"
-                          title="Click to roll">{{entry.total}}</span>
-                    <a class="spec-delete" data-spec="{{../key}}" data-index="{{idx}}" title="Delete">
-                      <i class="fas fa-trash"></i>
-                    </a>
+        {{!-- Custom Skills (Item-based) --}}
+        <div class="custom-skills-section">
+          <div class="items-header">
+            <h3>{{localize "ROGUE_TRADER.CustomSkills"}}</h3>
+            <a class="item-create" data-type="skill" title="Create Skill">
+              <i class="fas fa-plus"></i> {{localize "ROGUE_TRADER.AddSkill"}}
+            </a>
+          </div>
+          <ol class="item-list custom-skills-list">
+            {{#each customSkills as |skill|}}
+              <li class="item skill" data-item-id="{{skill._id}}">
+                <div class="skill-item-row">
+                  <span class="skill-name clickable custom-skill-roll" data-item-id="{{skill._id}}" title="Click to roll">
+                    {{skill.name}}
+                    <span class="skill-char">({{skill.charLabel}})</span>
+                  </span>
+                  <div class="skill-training-display">
+                    {{#if skill.system.trained}}<span class="training-badge">T</span>{{/if}}
+                    {{#if skill.system.plus10}}<span class="training-badge">+10</span>{{/if}}
+                    {{#if skill.system.plus20}}<span class="training-badge">+20</span>{{/if}}
                   </div>
-                {{/each}}
-              </div>
-            </div>
-          {{/each}}
+                  <span class="skill-total" title="Target number">{{skill.targetNumber}}</span>
+                  <div class="item-controls">
+                    <a class="item-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a class="item-delete" title="Delete"><i class="fas fa-trash"></i></a>
+                  </div>
+                </div>
+              </li>
+            {{/each}}
+          </ol>
         </div>
       </div>
     </div>

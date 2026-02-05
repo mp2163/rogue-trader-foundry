@@ -70,6 +70,7 @@ export class RogueTraderActorSheet extends ActorSheet {
     const traits = [];
     const weapons = [];
     const powers = [];
+    const customSkills = [];
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
@@ -87,6 +88,23 @@ export class RogueTraderActorSheet extends ActorSheet {
         i.charLabel = game.i18n.localize(CONFIG.ROGUE_TRADER.characteristics[charKey]);
         i.rollTypeLabel = game.i18n.localize(CONFIG.ROGUE_TRADER.powerRollTypes[i.system.rollType] || "ROGUE_TRADER.PowerRollTypeSkill");
         powers.push(i);
+      } else if (i.type === "skill") {
+        // Add display labels and calculate target number for skill items
+        const charKey = i.system.characteristic || "int";
+        i.charLabel = CONFIG.ROGUE_TRADER.characteristics[charKey]
+          ? charKey.toUpperCase()
+          : "INT";
+
+        // Calculate target number
+        const char = context.system.characteristics[charKey];
+        const charValue = char?.total || char?.value || 0;
+        let targetNumber = i.system.trained ? charValue : Math.floor(charValue / 2);
+        if (i.system.plus10) targetNumber += 10;
+        if (i.system.plus20) targetNumber += 20;
+        targetNumber += Number(i.system.modifier) || 0;
+        i.targetNumber = targetNumber;
+
+        customSkills.push(i);
       }
     }
 
@@ -94,6 +112,7 @@ export class RogueTraderActorSheet extends ActorSheet {
     context.traits = traits;
     context.weapons = weapons;
     context.powers = powers;
+    context.customSkills = customSkills;
   }
 
   /**
@@ -185,47 +204,6 @@ export class RogueTraderActorSheet extends ActorSheet {
       };
     }
     context.skills = skills;
-
-    // Process specialization skills
-    const specializations = {};
-    const systemSpecs = context.system.specializations || {};
-
-    for (const [key, specConfig] of Object.entries(CONFIG.ROGUE_TRADER.specializations)) {
-      const entries = systemSpecs[key] || [];
-      const char = context.system.characteristics[specConfig.char];
-      const charTotal = char?.total || 0;
-
-      const processedEntries = entries.map((entry, idx) => {
-        const isTrained = entry.trained || false;
-        const isBasic = entry.isBasic || false; // Can override advanced to basic
-
-        // If trained: full char value
-        // If marked basic but untrained: half char value
-        // If advanced and untrained (not made basic): cannot use
-        let baseValue = isTrained ? charTotal : (isBasic ? Math.floor(charTotal / 2) : 0);
-
-        let total = baseValue;
-        if (entry.plus10) total += 10;
-        if (entry.plus20) total += 20;
-        total += Number(entry.modifier) || 0;
-
-        // Can use if trained, or if marked as basic
-        const canUse = isTrained || isBasic;
-
-        return {
-          ...entry,
-          isBasic: isBasic,
-          total: canUse ? total : "—"
-        };
-      });
-
-      specializations[key] = {
-        label: game.i18n.localize(specConfig.label),
-        charLabel: specConfig.char.toUpperCase(),
-        entries: processedEntries
-      };
-    }
-    context.specializations = specializations;
   }
 
   /* -------------------------------------------- */
@@ -273,17 +251,8 @@ export class RogueTraderActorSheet extends ActorSheet {
     // Skill rolls
     html.on("click", ".skill-roll", this._onSkillRoll.bind(this));
 
-    // Specialization rolls
-    html.on("click", ".spec-roll", this._onSpecializationRoll.bind(this));
-
-    // Add specialization
-    html.on("click", ".spec-add", this._onAddSpecialization.bind(this));
-
-    // Delete specialization
-    html.on("click", ".spec-delete", this._onDeleteSpecialization.bind(this));
-
-    // Specialization field changes (explicit handling for array updates)
-    html.on("change", ".spec-entry input[data-field], .spec-entry select[data-field]", this._onSpecializationChange.bind(this));
+    // Custom skill item rolls
+    html.on("click", ".custom-skill-roll", this._onCustomSkillRoll.bind(this));
 
     // Power roll
     html.on("click", ".power-roll", this._onPowerRoll.bind(this));
@@ -352,6 +321,16 @@ export class RogueTraderActorSheet extends ActorSheet {
         itemData.system = {
           description: "",
           modifiers: []
+        };
+        break;
+      case "skill":
+        itemData.system = {
+          description: "",
+          characteristic: "int",
+          trained: true,
+          plus10: false,
+          plus20: false,
+          modifier: 0
         };
         break;
     }
@@ -491,50 +470,13 @@ export class RogueTraderActorSheet extends ActorSheet {
   }
 
   /**
-   * Handle specialization roll
-   * @param {Event} event The originating click event
-   * @private
-   */
-  async _onSpecializationRoll(event) {
-    event.preventDefault();
-    // Use event.target and find closest .spec-roll for delegated events
-    const element = event.target.closest(".spec-roll");
-    if (!element) return;
-
-    const specKey = element.dataset.spec;
-    const specIndex = parseInt(element.dataset.index);
-
-    if (!specKey || isNaN(specIndex)) return;
-
-    // Check for shift-click for quick roll
-    if (event.shiftKey) {
-      return this.actor.rollSkill(specKey, { modifier: 0, isSpecialization: true, specIndex });
-    }
-
-    // Show dialog for modifier
-    return this._showSkillRollDialog(specKey, true, specIndex);
-  }
-
-  /**
    * Show skill roll dialog
    * @param {string} skillKey The skill key
-   * @param {boolean} isSpec Whether this is a specialization
-   * @param {number} specIndex The specialization index (if applicable)
    * @private
    */
-  async _showSkillRollDialog(skillKey, isSpec, specIndex) {
-    const skillConfig = isSpec
-      ? CONFIG.ROGUE_TRADER.specializations[skillKey]
-      : CONFIG.ROGUE_TRADER.skills[skillKey];
-
-    let skillName;
-    if (isSpec) {
-      const entries = this.actor.system.specializations?.[skillKey] || [];
-      const entry = entries[specIndex];
-      skillName = `${game.i18n.localize(skillConfig.label)} (${entry?.name || "Unknown"})`;
-    } else {
-      skillName = game.i18n.localize(skillConfig.label);
-    }
+  async _showSkillRollDialog(skillKey) {
+    const skillConfig = CONFIG.ROGUE_TRADER.skills[skillKey];
+    const skillName = game.i18n.localize(skillConfig.label);
 
     // Build difficulty options
     let difficultyOptions = "";
@@ -568,11 +510,7 @@ export class RogueTraderActorSheet extends ActorSheet {
               const difficulty = parseInt(html.find('[name="difficulty"]').val()) || 0;
               const extraMod = parseInt(html.find('[name="modifier"]').val()) || 0;
               const modifier = difficulty + extraMod;
-              const result = await this.actor.rollSkill(skillKey, {
-                modifier,
-                isSpecialization: isSpec,
-                specIndex
-              });
+              const result = await this.actor.rollSkill(skillKey, { modifier });
               resolve(result);
             }
           },
@@ -588,97 +526,159 @@ export class RogueTraderActorSheet extends ActorSheet {
   }
 
   /**
-   * Handle adding a specialization
+   * Handle custom skill item roll
    * @param {Event} event The originating click event
    * @private
    */
-  async _onAddSpecialization(event) {
+  async _onCustomSkillRoll(event) {
     event.preventDefault();
-    const specKey = event.currentTarget.dataset.spec;
+    const element = event.currentTarget;
+    const itemId = element.dataset.itemId;
+    const item = this.actor.items.get(itemId);
 
-    if (!specKey) return;
+    if (!item) return;
 
-    const specs = foundry.utils.deepClone(this.actor.system.specializations || {});
-    if (!specs[specKey]) specs[specKey] = [];
+    const charKey = item.system.characteristic || "int";
+    const char = this.actor.system.characteristics[charKey];
+    const charValue = char?.total || char?.value || 0;
 
-    specs[specKey].push({
-      name: "",
-      trained: true, // New specializations are trained by default
-      plus10: false,
-      plus20: false,
-      modifier: 0,
-      isBasic: false
-    });
+    // Calculate base target number
+    let baseTarget = item.system.trained ? charValue : Math.floor(charValue / 2);
+    if (item.system.plus10) baseTarget += 10;
+    if (item.system.plus20) baseTarget += 20;
+    baseTarget += Number(item.system.modifier) || 0;
 
-    await this.actor.update({ "system.specializations": specs });
-  }
-
-  /**
-   * Handle deleting a specialization
-   * @param {Event} event The originating click event
-   * @private
-   */
-  async _onDeleteSpecialization(event) {
-    event.preventDefault();
-    // Use event.target and find the closest .spec-delete for delegated events
-    const deleteBtn = event.target.closest(".spec-delete");
-    if (!deleteBtn) return;
-
-    const specKey = deleteBtn.dataset.spec;
-    const specIndex = parseInt(deleteBtn.dataset.index);
-
-    if (!specKey || isNaN(specIndex)) return;
-
-    const specs = foundry.utils.deepClone(this.actor.system.specializations || {});
-    if (!specs[specKey]) return;
-
-    // Validate index is within bounds
-    if (specIndex < 0 || specIndex >= specs[specKey].length) return;
-
-    specs[specKey].splice(specIndex, 1);
-
-    await this.actor.update({ "system.specializations": specs });
-  }
-
-  /**
-   * Handle specialization field changes
-   * @param {Event} event The originating change event
-   * @private
-   */
-  async _onSpecializationChange(event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    // Use event.target for the actual input element in delegated events
-    const element = event.target;
-    const specEntry = element.closest(".spec-entry");
-    if (!specEntry) return;
-
-    const specKey = specEntry.dataset.spec;
-    const specIndex = parseInt(specEntry.dataset.index);
-    const field = element.dataset.field;
-
-    if (!specKey || isNaN(specIndex) || !field) return;
-
-    // Get current specializations
-    const specs = foundry.utils.deepClone(this.actor.system.specializations || {});
-    if (!specs[specKey] || !specs[specKey][specIndex]) return;
-
-    // Get the new value
-    let value;
-    if (element.type === "checkbox") {
-      value = element.checked;
-    } else if (element.type === "number") {
-      value = Number(element.value) || 0;
-    } else {
-      value = element.value;
+    // Check for shift-click for quick roll
+    if (event.shiftKey) {
+      return this._rollCustomSkill(item, baseTarget, 0);
     }
 
-    // Update the specific field
-    specs[specKey][specIndex][field] = value;
+    // Show dialog for difficulty/modifier
+    return this._showCustomSkillRollDialog(item, baseTarget);
+  }
 
-    // Update the actor
-    await this.actor.update({ "system.specializations": specs });
+  /**
+   * Show custom skill roll dialog
+   * @param {Item} item The skill item
+   * @param {number} baseTarget The base target number
+   * @private
+   */
+  async _showCustomSkillRollDialog(item, baseTarget) {
+    const charKey = item.system.characteristic || "int";
+    const charLabel = game.i18n.localize(CONFIG.ROGUE_TRADER.characteristics[charKey]);
+
+    // Build difficulty options
+    let difficultyOptions = "";
+    for (const [key, diff] of Object.entries(CONFIG.ROGUE_TRADER.testDifficulty)) {
+      const selected = key === "challenging" ? "selected" : "";
+      difficultyOptions += `<option value="${diff.modifier}" ${selected}>${game.i18n.localize(diff.label)}</option>`;
+    }
+
+    const content = `
+      <form class="roll-dialog">
+        <div class="target-display">
+          <span class="label">Target Number:</span>
+          <span class="target-number">${baseTarget}</span>
+        </div>
+        <div class="form-group">
+          <label>${game.i18n.localize("ROGUE_TRADER.Difficulty")}</label>
+          <select name="difficulty">${difficultyOptions}</select>
+        </div>
+        <div class="form-group">
+          <label>${game.i18n.localize("ROGUE_TRADER.ExtraModifier")}</label>
+          <input type="number" name="modifier" value="0" />
+        </div>
+      </form>
+    `;
+
+    return new Promise((resolve) => {
+      new Dialog({
+        title: `${item.name} (${charLabel}) Test`,
+        content: content,
+        buttons: {
+          roll: {
+            icon: '<i class="fas fa-dice"></i>',
+            label: "Roll",
+            callback: async (html) => {
+              const difficulty = parseInt(html.find('[name="difficulty"]').val()) || 0;
+              const extraMod = parseInt(html.find('[name="modifier"]').val()) || 0;
+              const modifier = difficulty + extraMod;
+              const result = await this._rollCustomSkill(item, baseTarget, modifier);
+              resolve(result);
+            }
+          },
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: "Cancel",
+            callback: () => resolve(null)
+          }
+        },
+        default: "roll",
+        render: (html) => {
+          // Update target number display when modifiers change
+          const difficultySelect = html.find('[name="difficulty"]');
+          const extraModInput = html.find('[name="modifier"]');
+          const targetDisplay = html.find(".target-number");
+
+          const updateTarget = () => {
+            const difficulty = parseInt(difficultySelect.val()) || 0;
+            const extraMod = parseInt(extraModInput.val()) || 0;
+            const target = baseTarget + difficulty + extraMod;
+            targetDisplay.text(target);
+          };
+
+          difficultySelect.on("change", updateTarget);
+          extraModInput.on("input", updateTarget);
+          extraModInput.focus().select();
+        },
+        close: () => resolve(null)
+      }).render(true);
+    });
+  }
+
+  /**
+   * Roll a custom skill item
+   * @param {Item} item The skill item
+   * @param {number} baseTarget The base target number
+   * @param {number} modifier Additional modifier
+   * @private
+   */
+  async _rollCustomSkill(item, baseTarget, modifier) {
+    const target = baseTarget + modifier;
+    const charKey = item.system.characteristic || "int";
+    const charLabel = game.i18n.localize(CONFIG.ROGUE_TRADER.characteristics[charKey]);
+
+    // Roll d100
+    const roll = await new Roll("1d100").evaluate();
+    const isSuccess = roll.total <= target;
+    const degrees = Math.floor(Math.abs(target - roll.total) / 10);
+
+    // Build chat message (matching the format of other rolls)
+    const resultClass = isSuccess ? "success" : "failure";
+    const resultText = isSuccess ? "Success" : "Failure";
+
+    const messageContent = `
+      <div class="rogue-trader roll-result">
+        <h3>${item.name} (${charLabel})</h3>
+        <div class="roll-details">
+          <span class="target">Target: ${target}</span>
+          ${modifier ? `<span class="modifier">(Base ${baseTarget} + Modifier ${modifier >= 0 ? "+" : ""}${modifier})</span>` : ""}
+        </div>
+        <div class="roll-outcome ${resultClass}">
+          <span class="result">${resultText}</span>
+          <span class="degrees">${degrees} Degree${degrees !== 1 ? "s" : ""}</span>
+        </div>
+      </div>
+    `;
+
+    // Send to chat using roll.toMessage for consistent display
+    await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: messageContent,
+      rollMode: game.settings.get("core", "rollMode")
+    });
+
+    return { roll, isSuccess, degrees };
   }
 
   /**

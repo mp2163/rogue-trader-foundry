@@ -87,18 +87,6 @@
         "tracking": { "trained": false, "plus10": false, "plus20": false, "modifier": 0, "isBasic": false },
         "wrangling": { "trained": false, "plus10": false, "plus20": false, "modifier": 0, "isBasic": false }
       },
-      "specializations": {
-        "ciphers": [],
-        "commonLore": [],
-        "drive": [],
-        "forbiddenLore": [],
-        "navigation": [],
-        "performer": [],
-        "scholasticLore": [],
-        "secretTongue": [],
-        "speakLanguage": [],
-        "trade": []
-      },
       "inventory": []
     },
     "npc": {
@@ -108,7 +96,7 @@
     }
   },
   "Item": {
-    "types": ["trait", "weapon", "power"],
+    "types": ["trait", "weapon", "power", "skill"],
     "templates": {
       "base": {
         "description": ""
@@ -133,6 +121,14 @@
       "damage": "",
       "penetration": 0,
       "notes": ""
+    },
+    "skill": {
+      "templates": ["base"],
+      "characteristic": "int",
+      "trained": true,
+      "plus10": false,
+      "plus20": false,
+      "modifier": 0
     }
   }
 }

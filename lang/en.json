@@ -167,6 +167,9 @@
   "ROGUE_TRADER.GearNotes": "Notes",
 
   "ROGUE_TRADER.SpecializationSkills": "Specialization Skills",
+  "ROGUE_TRADER.CustomSkills": "Custom Skills",
+  "ROGUE_TRADER.AddSkill": "Add Skill",
+  "ROGUE_TRADER.SkillTraining": "Training Level",
   "ROGUE_TRADER.BaseValue": "Base Value",
   "ROGUE_TRADER.TargetNumber": "Target Number",
   "ROGUE_TRADER.NoModifiers": "No modifiers. Click \"Add Modifier\" to create one.",

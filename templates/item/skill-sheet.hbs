@@ -1,0 +1,71 @@
+<form class="{{cssClass}} rogue-trader-sheet item-sheet skill-sheet" autocomplete="off">
+  {{!-- Header --}}
+  <header class="sheet-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <div class="header-fields">
+      <h1 class="item-name">
+        <input name="name" type="text" value="{{item.name}}" placeholder="Skill Name" />
+      </h1>
+    </div>
+  </header>
+
+  {{!-- Tabs --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="stats">{{localize "ROGUE_TRADER.Stats"}}</a>
+    <a class="item" data-tab="description">{{localize "ROGUE_TRADER.Description"}}</a>
+  </nav>
+
+  {{!-- Body --}}
+  <section class="sheet-body">
+    {{!-- Stats Tab --}}
+    <div class="tab stats" data-group="primary" data-tab="stats">
+      <div class="skill-stats">
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.PowerCharacteristic"}}</label>
+          <select name="system.characteristic">
+            {{#each characteristics as |label key|}}
+              <option value="{{key}}" {{#if (eq key ../system.characteristic)}}selected{{/if}}>{{label}}</option>
+            {{/each}}
+          </select>
+          <p class="hint">The characteristic this skill is based on</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.SkillTraining"}}</label>
+          <div class="training-checkboxes">
+            <label class="checkbox-label">
+              <input type="checkbox" name="system.trained" {{#if system.trained}}checked{{/if}} />
+              {{localize "ROGUE_TRADER.SkillTrained"}}
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="system.plus10" {{#if system.plus10}}checked{{/if}} />
+              +10
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="system.plus20" {{#if system.plus20}}checked{{/if}} />
+              +20
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.ExtraModifier"}}</label>
+          <input type="number" name="system.modifier" value="{{system.modifier}}" data-dtype="Number" placeholder="0" />
+          <p class="hint">Additional permanent modifier</p>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "ROGUE_TRADER.TargetNumber"}}</label>
+          <span class="skill-target-display">{{targetNumber}}</span>
+        </div>
+      </div>
+    </div>
+
+    {{!-- Description Tab --}}
+    <div class="tab description" data-group="primary" data-tab="description">
+      <div class="editor-container">
+        {{editor system.description target="system.description" button=true owner=owner editable=editable}}
+      </div>
+    </div>
+  </section>
+</form>

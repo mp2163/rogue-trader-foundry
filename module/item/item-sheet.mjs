@@ -44,6 +44,8 @@ export class RogueTraderItemSheet extends ItemSheet {
       this._prepareWeaponData(context);
     } else if (this.item.type === "power") {
       this._preparePowerData(context);
+    } else if (this.item.type === "skill") {
+      this._prepareSkillData(context);
     }
 
     // Enrich description for editor
@@ -106,6 +108,34 @@ export class RogueTraderItemSheet extends ItemSheet {
     context.rollTypes = {};
     for (const [key, label] of Object.entries(CONFIG.ROGUE_TRADER.powerRollTypes)) {
       context.rollTypes[key] = game.i18n.localize(label);
+    }
+  }
+
+  /**
+   * Prepare skill-specific data
+   * @param {Object} context The item data
+   */
+  _prepareSkillData(context) {
+    // Add characteristics for dropdown (localized)
+    context.characteristics = {};
+    for (const [key, label] of Object.entries(CONFIG.ROGUE_TRADER.characteristics)) {
+      context.characteristics[key] = game.i18n.localize(label);
+    }
+
+    // Calculate target number if we have a parent actor
+    if (this.item.parent) {
+      const charKey = context.system.characteristic || "int";
+      const char = this.item.parent.system.characteristics?.[charKey];
+      const charValue = char?.total || char?.value || 0;
+
+      let total = context.system.trained ? charValue : Math.floor(charValue / 2);
+      if (context.system.plus10) total += 10;
+      if (context.system.plus20) total += 20;
+      total += Number(context.system.modifier) || 0;
+
+      context.targetNumber = total;
+    } else {
+      context.targetNumber = "—";
     }
   }
 
